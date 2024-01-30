@@ -10,9 +10,6 @@ public enum ErrorType {
     USERNAME_EXISTS("Username already exists", HttpStatus.BAD_REQUEST),
     INVALID_STRING("Invalid string", HttpStatus.BAD_REQUEST);
 
-
-
-
     private final String message;
     private final HttpStatus status;
 

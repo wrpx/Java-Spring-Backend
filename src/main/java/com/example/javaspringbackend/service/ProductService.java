@@ -5,6 +5,8 @@ import com.example.javaspringbackend.exception.ErrorType;
 import com.example.javaspringbackend.exception.CustomException;
 import com.example.javaspringbackend.model.Product;
 import com.example.javaspringbackend.repository.ProductRepository;
+import com.example.javaspringbackend.util.StringValidationUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
@@ -26,10 +29,12 @@ public class ProductService {
     }
 
     public Product createProduct(Product product) {
+        validateProduct(product);
         return productRepository.save(product);
     }
 
     public Product updateProduct(Long id, Product productDetails) {
+        validateProduct(productDetails);
         Product product = getProductById(id);
 
         if (productDetails.getName() != null && !productDetails.getName().isEmpty()) {
@@ -50,4 +55,14 @@ public class ProductService {
         }
         productRepository.deleteById(id);
     }
+
+    private void validateProduct(Product product) {
+        if (product.getPrice() == null || product.getPrice() < 0) {
+            throw new CustomException("Price must be a positive number", HttpStatus.BAD_REQUEST);
+        }
+        if (StringValidationUtil.isInvalidString(product.getName()) || StringValidationUtil.isInvalidString(product.getDetail())) {
+            throw new CustomException("Name and detail must contain only English letters and numbers", ErrorType.INVALID_STRING.getStatus());
+        }
+    }
 }
+

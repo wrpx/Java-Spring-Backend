@@ -5,6 +5,7 @@ import com.example.javaspringbackend.exception.CustomException;
 import com.example.javaspringbackend.exception.ErrorType;
 import com.example.javaspringbackend.model.User;
 import com.example.javaspringbackend.repository.UserRepository;
+import com.example.javaspringbackend.util.StringValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,10 +26,9 @@ public class UserService {
         if (existsByUsername(user.getUsername())) {
             throw new CustomException(ErrorType.USERNAME_EXISTS.getMessage(), ErrorType.USERNAME_EXISTS.getStatus());
         }
-        if (isInvalidString(user.getUsername()) || isInvalidString(user.getPassword())) {
+        if (StringValidationUtil.isInvalidString(user.getUsername()) || StringValidationUtil.isInvalidString(user.getPassword())) {
             throw new CustomException("Username and password must contain only English letters and numbers", ErrorType.INVALID_STRING.getStatus());
         }
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -40,9 +40,5 @@ public class UserService {
 
     public boolean existsByUsername(String username) {
         return userRepository.findByUsername(username).isPresent();
-    }
-
-    public boolean isInvalidString(String input) {
-        return !input.matches("[A-Za-z0-9]+");
     }
 }
