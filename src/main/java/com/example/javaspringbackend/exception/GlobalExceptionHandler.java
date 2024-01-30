@@ -10,25 +10,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<String> handleProductNotFound(ProductNotFoundException ex) {
-        logger.error("Product not found: {}", ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
-        logger.error("Illegal argument: {}", ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<String> handleCustomException(CustomException ex) {
+        logger.error("Error occurred: {}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), ex.getStatus());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralException(Exception ex) {
         logger.error("An error occurred: ", ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("An unexpected error has occurred", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
 

@@ -21,7 +21,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginCredentials credentials) {
+    public ResponseEntity<String> login(@RequestBody LoginCredentials credentials) {
         if (userService.checkUserCredentials(credentials.getUsername(), credentials.getPassword())) {
             return ResponseEntity.ok("User logged in successfully");
         } else {
@@ -30,29 +30,29 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
+    public ResponseEntity<String> register(@RequestBody RegistrationRequest request) {
         try {
             User newUser = new User();
             newUser.setUsername(request.getUsername());
             newUser.setPassword(request.getPassword());
             userService.saveUser(newUser);
-
             return ResponseEntity.ok("registered successfully");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Unable to register user: " + e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
+
     @Setter
     @Getter
-    static class LoginCredentials {
+    private static class LoginCredentials {
         private String username;
         private String password;
     }
 
     @Setter
     @Getter
-    static class RegistrationRequest {
+    private static class RegistrationRequest {
         private String username;
         private String password;
     }
