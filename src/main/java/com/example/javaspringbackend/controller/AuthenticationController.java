@@ -14,12 +14,10 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final UserService userService;
-
     @Autowired
     public AuthenticationController(UserService userService) {
         this.userService = userService;
     }
-
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginCredentials credentials) {
         if (userService.checkUserCredentials(credentials.getUsername(), credentials.getPassword())) {
