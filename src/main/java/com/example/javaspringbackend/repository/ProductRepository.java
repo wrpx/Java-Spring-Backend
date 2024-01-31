@@ -1,4 +1,3 @@
-//ProductRepository.java
 package com.example.javaspringbackend.repository;
 import com.example.javaspringbackend.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,3 @@
-//User.java
 package com.example.javaspringbackend.model;
 
 import jakarta.persistence.*;

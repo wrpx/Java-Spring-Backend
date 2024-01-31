@@ -1,4 +1,3 @@
-//GlobalExceptionHandler.java
 package com.example.javaspringbackend.exception;
 
 import org.slf4j.Logger;

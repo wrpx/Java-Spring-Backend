@@ -1,4 +1,3 @@
-//CustomException.java
 package com.example.javaspringbackend.exception;
 
 import lombok.Getter;

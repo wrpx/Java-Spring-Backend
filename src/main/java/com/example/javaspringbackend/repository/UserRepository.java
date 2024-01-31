@@ -1,4 +1,3 @@
-//UserRepository.java
 package com.example.javaspringbackend.repository;
 
 import com.example.javaspringbackend.model.User;

@@ -1,4 +1,3 @@
-// StringValidationUtil.java
 package com.example.javaspringbackend.util;
 
 public class StringValidationUtil {

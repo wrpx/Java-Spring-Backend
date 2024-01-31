@@ -1,4 +1,3 @@
-//WebConfig.java
 package com.example.javaspringbackend.config;
 
 import org.springframework.context.annotation.Configuration;
