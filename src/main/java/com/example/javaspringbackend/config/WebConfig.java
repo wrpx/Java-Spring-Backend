@@ -1,5 +1,5 @@
 //WebConfig.java
-package com.example.javaspringbackend;
+package com.example.javaspringbackend.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

@@ -17,5 +17,4 @@ public enum ErrorType {
         this.message = message;
         this.status = status;
     }
-
 }
