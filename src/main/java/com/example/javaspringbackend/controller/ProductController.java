@@ -1,4 +1,3 @@
-// ProductController.java
 package com.example.javaspringbackend.controller;
 
 import com.example.javaspringbackend.model.Product;

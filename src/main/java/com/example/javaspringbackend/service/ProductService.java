@@ -1,4 +1,3 @@
-// ProductService.java
 package com.example.javaspringbackend.service;
 
 import com.example.javaspringbackend.exception.ErrorType;

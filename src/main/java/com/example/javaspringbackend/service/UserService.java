@@ -1,4 +1,3 @@
-//UserService.java
 package com.example.javaspringbackend.service;
 
 import com.example.javaspringbackend.exception.CustomException;
@@ -8,6 +7,8 @@ import com.example.javaspringbackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -21,28 +22,53 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void saveUser(User user) {
-        if (existsByUsername(user.getUsername())) {
-            throw new CustomException(ErrorType.USERNAME_EXISTS.getMessage(), ErrorType.USERNAME_EXISTS.getStatus());
+    public User saveUser(User user) {
+        if (existsByEmail(user.getEmail())) {
+            throw new CustomException(ErrorType.EMAIL_EXISTS.getMessage(), ErrorType.EMAIL_EXISTS.getStatus());
         }
-        if (isInvalidString(user.getUsername()) || isInvalidString(user.getPassword())) {
-            throw new CustomException("Username and password must contain only English letters and numbers", ErrorType.INVALID_STRING.getStatus());
+        if (isInvalidString(user.getName()) || isInvalidString(user.getEmail()) || isInvalidString(user.getPassword())) {
+            throw new CustomException("Invalid input", ErrorType.INVALID_STRING.getStatus());
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
-    public boolean checkUserCredentials(String username, String password) {
-        User user = userRepository.findByUsername(username).orElse(null);
+    public boolean checkUserCredentials(String email, String password) {
+        User user = userRepository.findByEmail(email).orElse(null);
         return user != null && passwordEncoder.matches(password, user.getPassword());
     }
 
-    public boolean existsByUsername(String username) {
-        return userRepository.findByUsername(username).isPresent();
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
-    public boolean isInvalidString(String input) {
-        return !input.matches("[A-Za-z0-9]+");
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new CustomException("User not found with id: " + id, ErrorType.USER_NOT_FOUND.getStatus()));
+    }
+
+    public User updateUser(Long id, User userDetails) {
+        User user = getUserById(id);
+        if (userDetails.getName() != null) user.setName(userDetails.getName());
+        if (userDetails.getEmail() != null) user.setEmail(userDetails.getEmail());
+        if (userDetails.getRole() != null) user.setRole(userDetails.getRole());
+        if (userDetails.getPersonalInfo() != null) user.setPersonalInfo(userDetails.getPersonalInfo());
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new CustomException("User not found with id: " + id, ErrorType.USER_NOT_FOUND.getStatus());
+        }
+        userRepository.deleteById(id);
+    }
+
+    private boolean existsByEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+    private boolean isInvalidString(String input) {
+        return !input.matches("[A-Za-z0-9@.]+");
     }
 }
