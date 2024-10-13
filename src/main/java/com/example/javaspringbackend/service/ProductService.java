@@ -30,16 +30,9 @@ public class ProductService {
 
     public Product updateProduct(Long id, Product productDetails) {
         Product product = getProductById(id);
-
-        if (productDetails.getName() != null && !productDetails.getName().isEmpty()) {
-            product.setName(productDetails.getName());
-        }
-        if (productDetails.getDetail() != null && !productDetails.getDetail().isEmpty()) {
-            product.setDetail(productDetails.getDetail());
-        }
-        if (productDetails.getPrice() != null) {
-            product.setPrice(productDetails.getPrice());
-        }
+        if (productDetails.getName() != null) product.setName(productDetails.getName());
+        if (productDetails.getDetail() != null) product.setDetail(productDetails.getDetail());
+        if (productDetails.getPrice() != null) product.setPrice(productDetails.getPrice());
         return productRepository.save(product);
     }
 

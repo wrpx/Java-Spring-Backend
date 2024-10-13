@@ -1,10 +1,10 @@
 package com.example.javaspringbackend.controller;
 
+import com.example.javaspringbackend.util.JwtUtil;
 import com.example.javaspringbackend.model.User;
 import com.example.javaspringbackend.service.UserService;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,20 +16,22 @@ import java.util.Map;
 public class AuthenticationController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    public AuthenticationController(UserService userService) {
+    public AuthenticationController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginCredentials credentials) {
         if (userService.checkUserCredentials(credentials.getEmail(), credentials.getPassword())) {
+            String token = jwtUtil.generateJwtToken(credentials.getEmail());
             Map<String, String> response = new HashMap<>();
-            response.put("token", "dummy-token"); // In a real application, generate a proper token
-            return ResponseEntity.ok(response);
+            response.put("token", token);
+            return ResponseEntity.ok(response); 
         } else {
-            return ResponseEntity.status(401).body("Invalid email or password");
+            return ResponseEntity.status(401).body("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
         }
     }
 

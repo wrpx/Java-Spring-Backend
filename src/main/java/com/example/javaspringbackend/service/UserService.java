@@ -4,10 +4,12 @@ import com.example.javaspringbackend.exception.CustomException;
 import com.example.javaspringbackend.exception.ErrorType;
 import com.example.javaspringbackend.model.User;
 import com.example.javaspringbackend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -16,7 +18,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -45,7 +46,12 @@ public class UserService {
 
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new CustomException("User not found with id: " + id, ErrorType.USER_NOT_FOUND.getStatus()));
+                .orElseThrow(() -> new CustomException("ไม่พบผู้ใช้ด้วย ID: " + id, ErrorType.USER_NOT_FOUND.getStatus()));
+    }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException("ไม่พบผู้ใช้ด้วยอีเมล: " + email, ErrorType.USER_NOT_FOUND.getStatus()));
     }
 
     public User updateUser(Long id, User userDetails) {
@@ -59,7 +65,7 @@ public class UserService {
 
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new CustomException("User not found with id: " + id, ErrorType.USER_NOT_FOUND.getStatus());
+            throw new CustomException("ไม่พบผู้ใช้ด้วย ID: " + id, ErrorType.USER_NOT_FOUND.getStatus());
         }
         userRepository.deleteById(id);
     }
@@ -70,5 +76,9 @@ public class UserService {
 
     private boolean isInvalidString(String input) {
         return !input.matches("[A-Za-z0-9@.]+");
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities(User user) {
+        return List.of(new SimpleGrantedAuthority(user.getRole()));
     }
 }

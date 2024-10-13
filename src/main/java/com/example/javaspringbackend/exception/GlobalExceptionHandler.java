@@ -23,4 +23,3 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>("An unexpected error has occurred", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
-

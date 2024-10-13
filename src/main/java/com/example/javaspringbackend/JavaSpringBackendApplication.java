@@ -1,4 +1,3 @@
-//JavaSpringBackendApplication.java
 package com.example.javaspringbackend;
 
 import org.springframework.boot.SpringApplication;

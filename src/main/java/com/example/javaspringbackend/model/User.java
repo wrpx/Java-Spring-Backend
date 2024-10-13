@@ -28,7 +28,6 @@ public class User {
     @Column(columnDefinition = "TEXT")
     private String personalInfo;
 
-
     @Override
     public String toString() {
         return "User{" + "id=" + id + ", name='" + name + '\'' + ", email='" + email + '\'' + ", role='" + role + '\'' + '}';
